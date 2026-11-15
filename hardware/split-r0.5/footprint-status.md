@@ -11,7 +11,7 @@ pre-dated the real pads. `scripts/audit_completion_r05.py` counts terminals with
 | EC11 encoder (8) | control | `E1`..`E8` | seller drawing | contacts verified, mount slot variant open | which tab variant was supplied |
 | MCP23017 module (3) | control | none | **missing** | 65 × 19 mm body, 2.54 mm pitch known | offset of the dual 7-pin header to the 20-pin header, hole positions |
 | CD74HC4067 module (2) | control | none | **missing** | HW-178 | distance and offset between the 8- and 16-pin header rows |
-| ESP32-S3 module | core | none | **missing** | ARCELI clone | row spacing, header-to-edge, USB connector faces and height |
+| ESP32-S3 module | core | `ESP32-S3-DevKitC-1_Module` | **vendor drawing** | Espressif v1.1 dimension drawing in `docs/sources/esp32-s3-devkitc-1/`: 25.4 × 62.74 mm, rows 22.86 mm apart, 2.54 pitch, 22 pins/row | confirm the ARCELI clone matches (caliper on row spacing); USB-C outline positions are ±0.5 mm |
 | PCM5102 DAC module | core | none | **missing** | | header positions, hole positions, body height |
 | TPA6132 module | core | none | **missing** | | header positions, jack position, hole positions |
 | Main output jack | core | `SameSky_SJ1-3523N` candidate (not installed) | candidate | datasheet | final part choice and panel/edge fit |

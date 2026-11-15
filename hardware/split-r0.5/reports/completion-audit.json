@@ -619,73 +619,8 @@
     },
     "core": {
       "required_connected_terminals": 71,
-      "terminals_with_matching_pads": 36,
+      "terminals_with_matching_pads": 49,
       "missing_terminals": [
-        {
-          "ref": "MCU1",
-          "pin": "5V",
-          "net": "SYS_5V"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "3V3",
-          "net": "3V3"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GND",
-          "net": "GND"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO1",
-          "net": "I2C_SDA"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO2",
-          "net": "I2C_SCL"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO4",
-          "net": "POT_ADC1_FILTER"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO5",
-          "net": "POT_ADC2_FILTER"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO10",
-          "net": "PANEL_IRQ"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO15",
-          "net": "I2S_BCLK"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO16",
-          "net": "I2S_LRCLK"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO17",
-          "net": "I2S_TX"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO40",
-          "net": "HP_EN"
-        },
-        {
-          "ref": "MCU1",
-          "pin": "GPIO41",
-          "net": "DAC_MUTE_N"
-        },
         {
           "ref": "DAC1",
           "pin": "VIN",
@@ -799,7 +734,6 @@
       ],
       "wrong_net_terminals": [],
       "padless_components": [
-        "MCU1",
         "DAC1",
         "HP1",
         "JMAIN"
@@ -814,6 +748,6 @@
     "Purchased module input coupling, pull-ups and configuration straps",
     "Mechanical fit of purchased components and rear connectors"
   ],
-  "missing_terminal_count": 155,
-  "padless_component_count": 9
+  "missing_terminal_count": 142,
+  "padless_component_count": 8
 }
