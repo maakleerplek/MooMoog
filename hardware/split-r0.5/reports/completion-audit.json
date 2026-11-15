@@ -3,7 +3,7 @@
   "boards": {
     "control": {
       "required_connected_terminals": 277,
-      "terminals_with_matching_pads": 66,
+      "terminals_with_matching_pads": 100,
       "missing_terminals": [
         {
           "ref": "RV1",
@@ -531,176 +531,6 @@
           "net": "GND"
         },
         {
-          "ref": "S1",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S1",
-          "pin": "ON",
-          "net": "S1_ON"
-        },
-        {
-          "ref": "S2",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S2",
-          "pin": "ON",
-          "net": "S2_ON"
-        },
-        {
-          "ref": "S3",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S3",
-          "pin": "ON",
-          "net": "S3_ON"
-        },
-        {
-          "ref": "S4",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S4",
-          "pin": "ON",
-          "net": "S4_ON"
-        },
-        {
-          "ref": "S5",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S5",
-          "pin": "ON",
-          "net": "S5_ON"
-        },
-        {
-          "ref": "S6",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S6",
-          "pin": "ON",
-          "net": "S6_ON"
-        },
-        {
-          "ref": "S7",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S7",
-          "pin": "ON",
-          "net": "S7_ON"
-        },
-        {
-          "ref": "S8",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S8",
-          "pin": "ON",
-          "net": "S8_ON"
-        },
-        {
-          "ref": "S9",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S9",
-          "pin": "ON",
-          "net": "S9_ON"
-        },
-        {
-          "ref": "S10",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S10",
-          "pin": "ON",
-          "net": "S10_ON"
-        },
-        {
-          "ref": "S12",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S12",
-          "pin": "ON",
-          "net": "S12_ON"
-        },
-        {
-          "ref": "S13",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S13",
-          "pin": "ON",
-          "net": "S13_ON"
-        },
-        {
-          "ref": "S14",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S14",
-          "pin": "ON",
-          "net": "S14_ON"
-        },
-        {
-          "ref": "S15",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S15",
-          "pin": "ON",
-          "net": "S15_ON"
-        },
-        {
-          "ref": "S16",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S16",
-          "pin": "ON",
-          "net": "S16_ON"
-        },
-        {
-          "ref": "S17",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S17",
-          "pin": "ON",
-          "net": "S17_ON"
-        },
-        {
-          "ref": "S18",
-          "pin": "COM",
-          "net": "GND"
-        },
-        {
-          "ref": "S18",
-          "pin": "ON",
-          "net": "S18_ON"
-        },
-        {
           "ref": "IO1",
           "pin": "VDD",
           "net": "3V3"
@@ -1084,23 +914,6 @@
         "RV20",
         "MX1",
         "MX2",
-        "S1",
-        "S2",
-        "S3",
-        "S4",
-        "S5",
-        "S6",
-        "S7",
-        "S8",
-        "S9",
-        "S10",
-        "S12",
-        "S13",
-        "S14",
-        "S15",
-        "S16",
-        "S17",
-        "S18",
         "IO1",
         "IO2",
         "IO3"
@@ -1305,6 +1118,6 @@
     "Purchased module input coupling, pull-ups and configuration straps",
     "Mechanical fit of purchased components and rear connectors"
   ],
-  "missing_terminal_count": 246,
-  "padless_component_count": 45
+  "missing_terminal_count": 212,
+  "padless_component_count": 28
 }

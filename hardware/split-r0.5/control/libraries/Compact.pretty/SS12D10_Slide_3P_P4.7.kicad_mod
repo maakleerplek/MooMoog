@@ -1,0 +1,198 @@
+(footprint "SS12D10_Slide_3P_P4.7"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "S"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "d4d9344e-fc2f-5b0c-8230-a354d08a52b9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "RUNCCI-YUN slide SPDT"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e133543e-3818-508e-8b7c-0c8d3004b4f9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4e745c0c-a98f-579b-bc56-5b0b389d9e00")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "R574 slide switch, pitch measured ~4.78 mm (SS-12D10 4.7); body size unverified"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0c2cb3e6-3588-522c-91d4-472835c92d51")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_line
+		(start -3.35 -6.35)
+		(end 3.35 -6.35)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "673166fe-93db-58c9-b11a-87d753b77b0d")
+	)
+	(fp_line
+		(start 3.35 -6.35)
+		(end 3.35 6.35)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "96b9ee6e-a5e7-5699-b440-4f413ded5bf2")
+	)
+	(fp_line
+		(start 3.35 6.35)
+		(end -3.35 6.35)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d22b7b2f-1f7c-56d7-8bbc-912025102810")
+	)
+	(fp_line
+		(start -3.35 6.35)
+		(end -3.35 -6.35)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "598061b3-4a78-51b7-a664-bb76ace0ccf2")
+	)
+	(fp_line
+		(start -3.5500000000000003 -6.55)
+		(end 3.5500000000000003 -6.55)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "2437226d-50a4-550a-8a4a-6c2cce43bbed")
+	)
+	(fp_line
+		(start 3.5500000000000003 -6.55)
+		(end 3.5500000000000003 6.55)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "4d9f8d7e-2986-5920-8ecc-3ac85ac72daa")
+	)
+	(fp_line
+		(start 3.5500000000000003 6.55)
+		(end -3.5500000000000003 6.55)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "97d13647-72e5-5b2e-bbb4-bf354d14c294")
+	)
+	(fp_line
+		(start -3.5500000000000003 6.55)
+		(end -3.5500000000000003 -6.55)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "e94b23cf-d19f-5468-939c-62ab5a29ce59")
+	)
+	(fp_line
+		(start -3.75 -6.75)
+		(end 3.75 -6.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "8e5eb02b-debb-5c31-8ed4-8fbe8386a4ba")
+	)
+	(fp_line
+		(start 3.75 -6.75)
+		(end 3.75 6.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "608d9e5d-c1b3-5f53-97de-b3741f1f2442")
+	)
+	(fp_line
+		(start 3.75 6.75)
+		(end -3.75 6.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "94464be9-0bf0-5f85-8f12-5106d3204728")
+	)
+	(fp_line
+		(start -3.75 6.75)
+		(end -3.75 -6.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "219630e2-b049-5ed6-9649-b67a878d29d8")
+	)
+	(pad "ON" thru_hole circle
+		(at 0 -4.7)
+		(size 1.8 1.8)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "04710ef3-47de-5435-89b6-d2a1f8c497fe")
+	)
+	(pad "COM" thru_hole circle
+		(at 0 0)
+		(size 1.8 1.8)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "fef66e63-133b-5926-8a32-3bb929b6f095")
+	)
+	(pad "OFF" thru_hole circle
+		(at 0 4.7)
+		(size 1.8 1.8)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "0b1927ed-54b7-586b-9161-c041dfd5736d")
+	)
+)
