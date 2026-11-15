@@ -19,69 +19,83 @@ Keep this file and those data files in step. Status: detailed design, **not** ma
 | Mechanical / enclosure | `mechanical/split-r0.5/README.md` |
 | Reports (audit, DRC, schematic PDFs) | `hardware/split-r0.5/reports/` |
 
-## Block diagram — power and signal flow
+## Block diagram 1 — power
+
+Power enters the system at **one point**: the USB-C port of the ESP32 module (the one wired to the
+USB-UART chip) on the core board. Everything else is derived from it.
 
 ```mermaid
-flowchart LR
-  subgraph PWR["Power"]
-    USB5["USB-C 5 V (host / adapter)"]
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "22px"}, "flowchart": {"nodeSpacing": 50, "rankSpacing": 70, "padding": 20}}}%%
+flowchart TB
+  IN(["POWER IN<br/>USB-C 5 V<br/>(ESP module, UART port)"]):::entry
+  subgraph CORE["CORE board"]
+    ESP["ESP32-S3<br/>5V pin"]
+    REG["Onboard regulator<br/>makes 3V3"]
+    DAC["DAC<br/>VIN = 5 V"]
+    HP["Headphone amp<br/>VCC = 3V3"]
   end
-  subgraph CORE["CORE board 210 x 90 mm (flat)"]
-    ESP["ESP32-S3 N16R8 module<br/>synth engine, scanning, audio"]
-    REG["module 3V3 regulator"]
-    FILT["RA1/CA1, RA2/CA2<br/>1k + 1nF filters"]
-    DAC["PCM5102 DAC<br/>L = main, R = phones"]
-    ATT["RA4 10k / RA5 4k7<br/>phones attenuator"]
-    HP["TPA6132 headphone amp"]
-    JM["Main out jack<br/>RA3 100R"]
-    JH["Headphone jack (on HP module)"]
-    JC["JCORE ribbon pads"]
+  RIB["Ribbon wire 1 = 3V3<br/>wires 2,4,6,8,10,12 = GND"]
+  subgraph CTRL["CONTROL board"]
+    LOAD["3x MCP23017, 2x mux,<br/>19 pot ends, power LED"]
   end
-  subgraph CTRL["CONTROL board 220 x 150 mm (sloped, under panel)"]
-    JP["JPANEL ribbon pads"]
-    IO["3x MCP23017<br/>0x20 / 0x21 / 0x22"]
-    MX["2x CD74HC4067 analog mux<br/>MX1: 16 pots, MX2: 3 pots"]
-    POTS["19 pots B10K"]
-    ENC["8 encoders EC11 + push"]
-    SW["17 slide switches"]
-    LED["power LED"]
-  end
-  KB["USB-MIDI keyboard (native USB, host mode)"]
 
-  USB5 -- "SYS_5V (UART port)" --> ESP
-  USB5 -- "SYS_5V" --> DAC
-  ESP --- REG
+  IN -- "SYS_5V" --> ESP
+  IN -- "SYS_5V" --> DAC
+  ESP --> REG
   REG -- "3V3" --> HP
-  REG -- "3V3 (ribbon 1)" --> JC
-  KB -. "USB host, VBUS OPEN" .-> ESP
+  REG -- "3V3" --> RIB
+  RIB -- "3V3 + GND" --> LOAD
 
-  JC == "12-wire soldered ribbon<br/>1 3V3 / 3 SDA / 5 SCL / 7 ADC1 / 9 ADC2 / 11 IRQ / even = GND" ==> JP
-
-  JP -- "3V3, GND" --> IO
-  JP -- "3V3, GND" --> MX
-  JP -- "3V3" --> LED
-  ESP -- "GPIO1 SDA, GPIO2 SCL (I2C)" --> JC
-  IO -- "INTA wire-OR → PANEL_IRQ" --> JC
-  JC -- "PANEL_IRQ → GPIO10" --> ESP
-  IO -- "GPA7/GPB7 → MUX_S0..S3" --> MX
-  ENC -- "A, B, push" --> IO
-  SW -- "ON contact" --> IO
-  POTS -- "wipers RVn_W" --> MX
-  MX -- "SIG: POT_ADC1/2" --> JP
-  JC -- "POT_ADC1/2" --> FILT
-  FILT -- "GPIO4 / GPIO5" --> ESP
-
-  ESP -- "I2S: GPIO15 BCLK, GPIO16 LRCLK, GPIO17 TX" --> DAC
-  ESP -- "GPIO41 DAC_MUTE_N → XSMT" --> DAC
-  ESP -- "GPIO40 HP_EN → CTRL" --> HP
-  DAC -- "OUTL MAIN_RAW" --> JM
-  DAC -- "OUTR PHONES_RAW" --> ATT
-  ATT -- "HP_FEED" --> HP
-  HP -- "PHONES_L / PHONES_R" --> JH
+  classDef entry fill:#ffd9a0,stroke:#c25b00,stroke-width:4px
 ```
 
-Reading guide: **thick arrow** = the ribbon (the only link between the boards); **dotted** =
-unresolved. No audio and no USB runs through the ribbon.
+Open: a bus-powered USB keyboard needs 5 V from somewhere; the native USB port may not supply it
+(open points O03, O11).
+
+## Block diagram 2 — signals
+
+Arrows show signal direction. The ribbon is the only link between the boards.
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "22px"}, "flowchart": {"nodeSpacing": 50, "rankSpacing": 70, "padding": 20}}}%%
+flowchart LR
+  subgraph CTRL["CONTROL board"]
+    POTS["19 pots"]
+    MX["2 muxes<br/>(analog)"]
+    SW["8 encoders<br/>17 switches"]
+    IO["3 MCP23017<br/>(I2C)"]
+  end
+  RIB(["12-wire ribbon"]):::rib
+  subgraph CORE["CORE board"]
+    FILT["1k + 1nF<br/>filters"]
+    ESP["ESP32-S3"]
+    DAC["DAC"]
+    AMP["Headphone<br/>amp"]
+  end
+  OUT1(["Main jack"])
+  OUT2(["Headphone jack"])
+  KB(["USB keyboard"])
+
+  POTS -- "wipers" --> MX
+  IO -- "MUX_S0..S3" --> MX
+  SW -- "A, B, push, ON" --> IO
+  MX -- "POT_ADC1 / 2" --> RIB
+  IO <-- "SDA, SCL, IRQ" --> RIB
+  RIB -- "POT_ADC1 / 2" --> FILT
+  FILT -- "GPIO4 / GPIO5" --> ESP
+  RIB <-- "GPIO1 SDA, GPIO2 SCL,<br/>GPIO10 IRQ" --> ESP
+  KB -. "native USB" .-> ESP
+  ESP -- "I2S GPIO15/16/17" --> DAC
+  ESP -- "GPIO41 mute" --> DAC
+  ESP -- "GPIO40 enable" --> AMP
+  DAC -- "left: MAIN" --> OUT1
+  DAC -- "right: PHONES" --> AMP
+  AMP --> OUT2
+
+  classDef rib fill:#dbe8ff,stroke:#1f4fbf,stroke-width:4px
+```
+
+Pin-level detail for every arrow is in the port tables below.
 
 ## Power
 
