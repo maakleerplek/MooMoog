@@ -24,3 +24,11 @@ symbol pin numbers used by the schematics. The audit maps the design pin names a
 
 Print `reports/fit-template-controls.pdf` at **100 %** (check the 20 mm scale bar), push the real part's
 pins through the drill circles and compare pitch, tab slots and body outline. Record the result here.
+
+## Modules without a published drawing (searched 2026-11-15)
+
+Web search found no dimensioned drawing for the generic clones: MCP23017 (65 × 19 mm listing only), HW-178 CD74HC4067
+(≈ 41 × 18.7 mm listing; SparkFun's BOB-09056 Eagle files exist but are a different board), GY-PCM5102 (29 × 16 mm vs
+30 × 24 mm listings disagree), TPA6132 module (nothing). Pitch is 2.54 mm everywhere; row offsets and hole positions
+must be **measured on the delivered boards** (caliper: header row-to-row centre distance, first-pin offset from the
+board edge, hole centres, board outline). Send those numbers and the footprints can be generated in minutes.
