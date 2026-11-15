@@ -10,6 +10,7 @@ Keep this file and those data files in step. Status: detailed design, **not** ma
 | What | Where |
 |---|---|
 | This plan, block diagram, port map | `docs/plan-r0.5.md` |
+| Browsable HTML copy of this plan (generated) | `docs/html/index.html`, published to GitHub Pages |
 | Electrical architecture, ribbon pinout, firmware hints | `hardware/split-r0.5/architecture.md` |
 | What is still unverified / to measure | `hardware/split-r0.5/remaining-verification.md` |
 | Decisions and user changes (Dutch) | `docs/decisions.md` |

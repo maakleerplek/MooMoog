@@ -1,0 +1,55 @@
+name: Publish documentation
+
+# Publishes docs/html (generated locally with scripts/build_docs_r05.py) to GitHub Pages.
+# One-time setup: repository Settings -> Pages -> Source: "GitHub Actions".
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'hardware/split-r0.5/previews/**'
+      - 'hardware/split-r0.5/stl/**'
+      - 'hardware/split-r0.5/reports/*.pdf'
+      - 'mechanical/split-r0.5/*.step'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble site (keeps the relative paths used by docs/html/index.html)
+        run: |
+          test -f docs/html/index.html
+          mkdir -p _site/docs _site/hardware/split-r0.5/reports _site/mechanical/split-r0.5
+          cp -r docs/html _site/docs/html
+          cp -r hardware/split-r0.5/previews hardware/split-r0.5/stl _site/hardware/split-r0.5/
+          cp hardware/split-r0.5/reports/*.pdf _site/hardware/split-r0.5/reports/
+          cp mechanical/split-r0.5/split-enclosure-and-boards.step _site/mechanical/split-r0.5/
+          cp docs/index.html _site/docs/index.html
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=docs/html/index.html"><title>Compact D R0.5</title><a href="docs/html/index.html">Compact D R0.5 documentation</a>' > _site/index.html
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

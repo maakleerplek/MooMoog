@@ -17,6 +17,7 @@ D = json.load(open(HW / 'design-master.json'))
 AUDIT = json.load(open(HW / 'reports/completion-audit.json'))
 SCAN = list(csv.DictReader(open(HW / 'scan.csv')))
 e = html.escape
+GH = 'https://github.com/maakleerplek/MooMoog/blob/main/'   # Markdown opens rendered on GitHub; Pages would serve it raw
 
 
 def table(head, rows, cls=''):
@@ -182,13 +183,13 @@ A flat <b>core board</b> (210&nbsp;×&nbsp;90&nbsp;mm) carries the ESP32-S3, the
 
 <h2 id="files">10. Files</h2>
 {table(['What', 'Where'], [
-    ('Plan (Markdown, source of this page)', '<a href="../plan-r0.5.md"><code>docs/plan-r0.5.md</code></a>'),
-    ('Architecture and ribbon detail', '<a href="../../hardware/split-r0.5/architecture.md"><code>hardware/split-r0.5/architecture.md</code></a>'),
-    ('Unverified items to measure', '<a href="../../hardware/split-r0.5/remaining-verification.md"><code>hardware/split-r0.5/remaining-verification.md</code></a>'),
-    ('Decisions (Dutch)', '<a href="../decisions.md"><code>docs/decisions.md</code></a>'),
+    ('Plan (Markdown, source of this page)', f'<a href="{GH}docs/plan-r0.5.md"><code>docs/plan-r0.5.md</code></a>'),
+    ('Architecture and ribbon detail', f'<a href="{GH}hardware/split-r0.5/architecture.md"><code>hardware/split-r0.5/architecture.md</code></a>'),
+    ('Unverified items to measure', f'<a href="{GH}hardware/split-r0.5/remaining-verification.md"><code>hardware/split-r0.5/remaining-verification.md</code></a>'),
+    ('Decisions (Dutch)', f'<a href="{GH}docs/decisions.md"><code>docs/decisions.md</code></a>'),
     ('KiCad projects', '<code>hardware/split-r0.5/control/</code>, <code>hardware/split-r0.5/core/</code>'),
     ('Reports (audit, DRC, ERC)', '<code>hardware/split-r0.5/reports/</code>'),
-    ('Enclosure', '<a href="../../mechanical/split-r0.5/README.md"><code>mechanical/split-r0.5/README.md</code></a>'),
+    ('Enclosure', f'<a href="{GH}mechanical/split-r0.5/README.md"><code>mechanical/split-r0.5/README.md</code></a>'),
     ('Rebuild this page', '<code>python3 scripts/build_docs_r05.py</code>'),
     ('Rebuild schematics / STLs / switch footprint', '<code>scripts/build_schematics_r05.py</code>, <code>scripts/export_stl_r05.py</code>, <code>scripts/build_switch_footprint_r05.py</code>')])}
 <footer>Generated from the repository data. The Markdown plan is the source for the prose and diagrams.</footer>
