@@ -1,0 +1,27 @@
+ERC report (2026-11-15T12:35:56+0100, Encoding UTF8)
+Report includes: Errors, Warnings, Exclusions
+
+***** Sheet /
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(53.34 mm, 78.74 mm): Symbol #PWR002 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(57.15 mm, 81.28 mm): Symbol #PWR001 Pin 1 [Power input, Line]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(275.59 mm, 85.09 mm): Symbol IO1 [MCP23017_module]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(379.73 mm, 85.09 mm): Symbol IO2 [MCP23017_module]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(485.14 mm, 85.09 mm): Symbol IO3 [MCP23017_module]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(624.84 mm, 85.09 mm): Symbol MX1 [CD74HC4067_module]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(725.17 mm, 85.09 mm): Symbol MX2 [CD74HC4067_module]
+
+ ** ERC messages: 7  Errors 2  Warnings 5

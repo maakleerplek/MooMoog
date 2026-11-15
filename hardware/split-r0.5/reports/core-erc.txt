@@ -1,0 +1,30 @@
+ERC report (2026-11-15T12:35:57+0100, Encoding UTF8)
+Report includes: Errors, Warnings, Exclusions
+
+***** Sheet /
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(53.34 mm, 78.74 mm): Symbol #PWR002 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(57.15 mm, 81.28 mm): Symbol #PWR001 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(105.41 mm, 101.60 mm): Symbol #PWR010 Pin 1 [Power input, Line]
+[label_dangling]: Label not connected to anything
+    ; error
+    @(384.81 mm, 215.90 mm): Label 'PHONES_L'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(384.81 mm, 218.44 mm): Label 'PHONES_R'
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(345.44 mm, 85.09 mm): Symbol MCU1 [ESP32-S3_module]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(359.41 mm, 228.60 mm): Symbol HP1 [TPA6132_headphone_module]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Compact'
+    ; warning
+    @(480.06 mm, 85.09 mm): Symbol DAC1 [PCM5102_DAC_module]
+
+ ** ERC messages: 8  Errors 5  Warnings 3
