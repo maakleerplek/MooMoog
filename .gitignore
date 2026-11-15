@@ -12,3 +12,4 @@
 # Release bundles and scratch
 *.zip
 tmp/
+fp-info-cache
