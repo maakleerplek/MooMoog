@@ -171,28 +171,28 @@
 		(layer "F.CrtYd")
 		(uuid "219630e2-b049-5ed6-9649-b67a878d29d8")
 	)
-	(pad "ON" thru_hole circle
+	(pad "1" thru_hole circle
 		(at 0 -4.7)
 		(size 1.8 1.8)
 		(drill 1.1)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
-		(uuid "04710ef3-47de-5435-89b6-d2a1f8c497fe")
+		(uuid "e2d805cb-c623-5807-bad4-1551f50f350c")
 	)
-	(pad "COM" thru_hole circle
+	(pad "2" thru_hole circle
 		(at 0 0)
 		(size 1.8 1.8)
 		(drill 1.1)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
-		(uuid "fef66e63-133b-5926-8a32-3bb929b6f095")
+		(uuid "ca3cc1f7-61c8-592a-8964-6f42b5d5fb43")
 	)
-	(pad "OFF" thru_hole circle
+	(pad "3" thru_hole circle
 		(at 0 4.7)
 		(size 1.8 1.8)
 		(drill 1.1)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
-		(uuid "0b1927ed-54b7-586b-9161-c041dfd5736d")
+		(uuid "cd6837e8-07f3-5608-aca7-0ec2aa90f952")
 	)
 )

@@ -29,7 +29,7 @@ def footprint():
     s = f'(footprint "{NAME}"\n\t(version 20241229)\n\t(generator "pcbnew")\n\t(generator_version "9.0")\n\t(layer "F.Cu")\n'
     s += prop('Reference', 'S', 'F.SilkS') + prop('Value', 'RUNCCI-YUN slide SPDT', 'F.Fab') + prop('Datasheet', '', 'F.Fab') + prop('Description', 'R574 slide switch, pitch measured ~4.78 mm (SS-12D10 4.7); body size unverified', 'F.Fab')
     s += rect(BW, BL, 'F.Fab', 0.1, 'fab') + rect(BW + 0.4, BL + 0.4, 'F.SilkS', 0.12, 'silk') + rect(BW + 0.8, BL + 0.8, 'F.CrtYd', 0.05, 'crt')
-    for n, y in (('ON', -PITCH), ('COM', 0), ('OFF', PITCH)):
+    for n, y in (('1', -PITCH), ('2', 0), ('3', PITCH)):   # 1 = ON, 2 = COM, 3 = OFF (SW_SPDT symbol numbering)
         s += f'\t(pad "{n}" thru_hole circle\n\t\t(at 0 {y})\n\t\t(size {PAD} {PAD})\n\t\t(drill {DRILL})\n\t\t(layers "*.Cu" "*.Mask")\n\t\t(remove_unused_layers no)\n\t\t(uuid "{U(n)}")\n\t)\n'
     return s + ')\n'
 
@@ -49,7 +49,8 @@ def apply():
             if b.FindNet(n) is None: b.Add(nets[n])
         return nets[n]
     import json
-    pins = {c['ref']: {q['number']: q['net'] for q in c['pins']} for c in json.load(open(O.parent / 'design-master.json'))['components'] if c['kind'] == 'switch'}
+    num = {'ON': '1', 'COM': '2', 'OFF': '3'}
+    pins = {c['ref']: {num[q['number']]: q['net'] for q in c['pins']} for c in json.load(open(O.parent / 'design-master.json'))['components'] if c['kind'] == 'switch'}
     for f in list(b.GetFootprints()):
         r = f.GetReference()
         if r not in pins: continue

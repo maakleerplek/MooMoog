@@ -17,6 +17,8 @@ report = {'manufacturing_ready': False, 'boards': {}, 'unresolved_system_checks'
     'Purchased module input coupling, pull-ups and configuration straps',
     'Mechanical fit of purchased components and rear connectors',
 ]}
+# design-master pin names -> footprint pad numbers (= KiCad symbol pin numbers, so schematic and PCB agree)
+PADMAP = {'pot': {'LOW': '1', 'WIPER': '2', 'HIGH': '3'}, 'switch': {'ON': '1', 'COM': '2', 'OFF': '3'}}
 for name in master['boards']:
     board = pcb.LoadBoard(str(OUT / name / (name + '.kicad_pcb')))
     footprints = {f.GetReference(): f for f in board.GetFootprints()}
@@ -35,10 +37,11 @@ for name in master['boards']:
             if pin['net'] is None:
                 continue
             terminal = {'ref': ref, 'pin': pin['number'], 'net': pin['net']}
-            if pin['number'] not in pads:
+            pad = PADMAP.get(component['kind'], {}).get(pin['number'], pin['number'])
+            if pad not in pads:
                 missing.append(terminal)
-            elif pads[pin['number']] != pin['net']:
-                wrong.append(dict(terminal, actual_net=pads[pin['number']]))
+            elif pads[pad] != pin['net']:
+                wrong.append(dict(terminal, actual_net=pads[pad]))
             else:
                 present.append(terminal)
     drc_path = OUT / 'reports' / (name + '-drc.json')
