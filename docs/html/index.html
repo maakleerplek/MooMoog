@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compact D R0.5 documentation</title><style>
+:root{--bg:#fafaf7;--fg:#1b1d1f;--mut:#5d636a;--line:#d9dbd5;--card:#fff;--acc:#1f4fbf;--warn:#b45309;--warnbg:#fff4e0;--head:#eef0ea}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14161a;--fg:#e8e9e6;--mut:#9aa1a9;--line:#2c3038;--card:#1b1e24;--acc:#8fb1ff;--warn:#f0b35c;--warnbg:#2a2113;--head:#20242b}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 80px}
+header{padding:36px 0 12px}h1{font-size:2rem;margin:0 0 4px}h2{font-size:1.5rem;margin:48px 0 12px;padding-top:8px;border-top:1px solid var(--line)}h3{font-size:1.15rem;margin:28px 0 8px}
+p,li{max-width:75ch}.lead{font-size:1.1rem;color:var(--mut)}
+nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5;margin:0 -16px;padding:8px 16px;display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.9rem}
+nav a{color:var(--acc);text-decoration:none}nav a:hover{text-decoration:underline}
+.banner{background:var(--warnbg);border-left:4px solid var(--warn);padding:12px 16px;border-radius:6px;margin:16px 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}.card b{display:block;font-size:1.6rem;line-height:1.2}
+.tw{overflow-x:auto;margin:12px 0}table{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--head);position:sticky;top:0}
+code{background:var(--head);padding:1px 5px;border-radius:4px;font-size:.88em}
+.fig{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:16px 0;text-align:center}.fig img{max-width:100%;height:auto}
+.fig.dark{background:var(--card)}.cap{color:var(--mut);font-size:.9rem;margin:4px 0 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.btn{display:inline-block;padding:6px 12px;border:1px solid var(--line);border-radius:6px;color:var(--acc);text-decoration:none;margin:2px 6px 2px 0;background:var(--card)}
+details{margin:10px 0}summary{cursor:pointer;font-weight:600}.sw{display:flex;flex-wrap:wrap;gap:6px 16px;margin:8px 0}
+footer{margin-top:60px;color:var(--mut);font-size:.85rem}
+@media(max-width:600px){h1{font-size:1.6rem}}
+</style></head><body><div class="wrap">
+<header><h1>Compact D R0.5</h1><p class="lead">Two-board sloped digital synthesizer: ESP32-S3 sound engine, 19 pots, 8 encoders, 17 switches.</p>
+<div class="banner"><b>Detailed design, not production-ready.</b> 212 functional terminals still lack matching PCB pads across 28 padless components
+(pots, many module headers, ESP, DAC, headphone amp, main jack). No Gerbers or milling release.</div>
+<nav><a href="#overview">Overview</a><a href="#power">Power</a><a href="#signals">Signals</a><a href="#ribbon">Ribbon</a><a href="#core-ports">Core ports</a><a href="#control-ports">Control ports</a><a href="#schematics">Schematics</a><a href="#renders">3D &amp; CAD</a><a href="#status">Status</a><a href="#files">Files</a></nav></header>
+
+<h2 id="overview">1. Overview</h2>
+<p>A <b>control board</b> (220&nbsp;×&nbsp;150&nbsp;mm) sits under a 15° aluminium panel and carries every knob, encoder and switch.
+A flat <b>core board</b> (210&nbsp;×&nbsp;90&nbsp;mm) carries the ESP32-S3, the DAC and the headphone amplifier. A single soldered
+12-wire ribbon joins them. Both boards are intended to be milled from copper-clad plate.</p>
+<div class="cards">
+<div class="card"><b>Control board</b>19 pots (B10K) · 8 EC11 encoders · 17 slide switches · 3× MCP23017 · 2× CD74HC4067 · power LED</div>
+<div class="card"><b>Core board</b>ESP32-S3 N16R8 · PCM5102 DAC · TPA6132 headphone amp · main output jack · filters and pull-ups</div>
+<div class="card"><b>Link</b>12-wire ribbon: 3V3, I²C, two pot analog lines, interrupt, and a ground between every signal. No audio or USB on it.</div></div>
+<div class="grid2"><figure class="fig"><img src="../../hardware/split-r0.5/previews/assembled-front.png" alt="Assembled front view"><p class="cap">Assembled, front</p></figure>
+<figure class="fig"><img src="../../hardware/split-r0.5/previews/exploded.png" alt="Exploded assembly"><p class="cap">Exploded: panel, control PCB, rails, electronics PCB</p></figure></div>
+
+<h2 id="power">2. Power</h2>
+<p>Power enters at <b>one point</b>: the USB-C port of the ESP32 module that is wired to the USB-UART chip (core board).</p>
+<figure class="fig"><a href="assets/diagram-power.svg"><img src="assets/diagram-power.svg" alt="Power block diagram"></a><p class="cap">Power distribution (click for full size)</p></figure>
+<ol><li>USB 5&nbsp;V becomes <code>SYS_5V</code> and feeds the ESP module and the DAC; CC2 (10&nbsp;µF) buffers it.</li>
+<li>The ESP module's regulator makes <code>3V3</code> for the headphone amp, CC1, and, through ribbon wire 1, the whole control board.</li>
+<li>Ground returns on ribbon wires 2, 4, 6, 8, 10 and 12.</li>
+<li>Budget: pots about 6.3&nbsp;mA at 3.3&nbsp;V; control board allowance 50&nbsp;mA (an estimate, not a measurement).</li></ol>
+<div class="banner"><b>Open:</b> a bus-powered USB keyboard needs 5&nbsp;V. The module's native port may not supply it, and regulator headroom is unchecked (open points O03, O11).</div>
+
+<h2 id="signals">3. Signal flow</h2>
+<figure class="fig"><a href="assets/diagram-signal.svg"><img src="assets/diagram-signal.svg" alt="Signal block diagram"></a><p class="cap">Signal flow (click for full size)</p></figure>
+<h3>Controls → ESP</h3>
+<ul><li><b>Pots:</b> each sits between 3V3 and GND; the wiper (<code>RVn_W</code>) goes to one mux input. Four select lines <code>MUX_S0..S3</code> (MCP outputs on IO1 and IO2) choose the channel for both muxes. The selected wiper leaves on <code>POT_ADC1</code> or <code>POT_ADC2</code>, crosses the ribbon, passes a 1&nbsp;kΩ/1&nbsp;nF filter and enters GPIO4 or GPIO5.</li>
+<li><b>Switches and encoders:</b> each contact pulls an MCP input to GND against the chip's internal pull-up. A change pulls the shared open-drain <code>PANEL_IRQ</code> low (10&nbsp;kΩ pull-up RP5), so the firmware only reads I²C when something moved.</li>
+<li><b>I²C:</b> GPIO1/GPIO2 at 100&nbsp;kHz (400&nbsp;kHz after testing). RP3/RP4 pull-ups are DNP.</li></ul>
+<h3>Audio</h3>
+<ol><li>ESP → DAC over I²S (GPIO15 BCLK, GPIO16 LRCLK, GPIO17 TX); PLL mode, I²S format.</li>
+<li>DAC left → <code>MAIN_RAW</code> → RA3 100&nbsp;Ω → rear jack (tip and ring tied, sleeve GND).</li>
+<li>DAC right → <code>PHONES_RAW</code> → RA4/RA5 divider → <code>HP_FEED</code> → TPA6132 inputs → the module's own headphone jack.</li>
+<li>GPIO41 <code>DAC_MUTE_N</code> drives XSMT; GPIO40 <code>HP_EN</code> drives the amp CTRL. Both have 100&nbsp;kΩ pull-downs.</li></ol>
+
+<h2 id="ribbon">4. Ribbon (JPANEL ↔ JCORE)</h2>
+<p>Pin 1 to pin 1; both ends are identical.</p><div class="tw"><table class=""><thead><tr><th>Wire</th><th>Net</th><th>Role</th></tr></thead><tbody><tr><td>1</td><td>3V3</td><td>control board supply</td></tr><tr><td>2</td><td>GND</td><td>return</td></tr><tr><td>3</td><td>I2C_SDA</td><td>ESP GPIO1 ↔ MCP SDA</td></tr><tr><td>4</td><td>GND</td><td>return</td></tr><tr><td>5</td><td>I2C_SCL</td><td>ESP GPIO2 ↔ MCP SCL</td></tr><tr><td>6</td><td>GND</td><td>return</td></tr><tr><td>7</td><td>POT_ADC1</td><td>MX1 SIG → filter → GPIO4</td></tr><tr><td>8</td><td>GND</td><td>return</td></tr><tr><td>9</td><td>POT_ADC2</td><td>MX2 SIG → filter → GPIO5</td></tr><tr><td>10</td><td>GND</td><td>return</td></tr><tr><td>11</td><td>PANEL_IRQ</td><td>MCP INTA (wire-OR) → GPIO10</td></tr><tr><td>12</td><td>GND</td><td>return</td></tr></tbody></table></div>
+
+<h2 id="core-ports">5. Core board port map</h2><div class="tw"><table class=""><thead><tr><th>ESP32-S3 pin</th><th>Net</th><th>Goes to</th><th>Direction</th></tr></thead><tbody><tr><td>5V (USB)</td><td>SYS_5V</td><td>DAC VIN, CC2 bulk cap</td><td>power in from USB-UART port</td></tr><tr><td>3V3</td><td>3V3</td><td>ribbon 1, HP1 VCC, CC1</td><td>power out (module regulator)</td></tr><tr><td>GPIO1</td><td>I2C_SDA</td><td>ribbon 3 → MCP SDA</td><td>I²C data</td></tr><tr><td>GPIO2</td><td>I2C_SCL</td><td>ribbon 5 → MCP SCL</td><td>I²C clock</td></tr><tr><td>GPIO4</td><td>POT_ADC1_FILTER</td><td>RA1/CA1 ← ribbon 7 ← MX1</td><td>ADC in</td></tr><tr><td>GPIO5</td><td>POT_ADC2_FILTER</td><td>RA2/CA2 ← ribbon 9 ← MX2</td><td>ADC in</td></tr><tr><td>GPIO10</td><td>PANEL_IRQ</td><td>ribbon 11 ← MCP INTA (RP5 pull-up)</td><td>interrupt in</td></tr><tr><td>GPIO15</td><td>I2S_BCLK</td><td>DAC BCK</td><td>I²S out</td></tr><tr><td>GPIO16</td><td>I2S_LRCLK</td><td>DAC LCK</td><td>I²S out</td></tr><tr><td>GPIO17</td><td>I2S_TX</td><td>DAC DIN</td><td>I²S out</td></tr><tr><td>GPIO40</td><td>HP_EN</td><td>HP1 CTRL (RA7 pull-down)</td><td>output</td></tr><tr><td>GPIO41</td><td>DAC_MUTE_N</td><td>DAC XSMT (RA6 pull-down)</td><td>output</td></tr><tr><td>native USB</td><td>—</td><td>USB-MIDI keyboard (host mode), power OPEN</td><td>USB host</td></tr></tbody></table></div>
+<p>Module pin names are functional. Physical header positions are <b>unverified</b>.</p>
+
+<h2 id="control-ports">6. Control board port map</h2>
+<h3>I/O expanders (MCP23017 modules)</h3><div class="tw"><table class=""><thead><tr><th>Module</th><th>I²C address</th><th>Strap A0 / A1 / A2</th><th>GPA7 / GPB7 outputs</th></tr></thead><tbody><tr><td>IO1</td><td>0x20</td><td>GND / GND / GND</td><td>MUX_S0 / MUX_S1</td></tr><tr><td>IO2</td><td>0x21</td><td>3V3 / GND / GND</td><td>MUX_S2 / MUX_S3</td></tr><tr><td>IO3</td><td>0x22</td><td>GND / 3V3 / GND</td><td>unused (low)</td></tr></tbody></table></div>
+<p>Contacts use GPA0–GPA6 and GPB0–GPB6. INTA of each chip goes to <code>PANEL_IRQ</code>, INTB is unused, RESET goes to <code>IO_RESET</code>.</p>
+<details open><summary>Potentiometers (19) → analog multiplexers</summary><div class="tw"><table class=""><thead><tr><th>Pot</th><th>Function</th><th>Mux</th><th>Channel</th><th>Net</th></tr></thead><tbody><tr><td>RV1</td><td>TUNE (master.tune)</td><td>MX1</td><td>0</td><td>RV1_W</td></tr><tr><td>RV2</td><td>GLIDE (glide.time)</td><td>MX1</td><td>1</td><td>RV2_W</td></tr><tr><td>RV3</td><td>MODULATION MIX (mod.mix)</td><td>MX1</td><td>2</td><td>RV3_W</td></tr><tr><td>RV4</td><td>LFO RATE (lfo.rate)</td><td>MX1</td><td>3</td><td>RV4_W</td></tr><tr><td>RV5</td><td>VOLUME (mix.osc1)</td><td>MX1</td><td>4</td><td>RV5_W</td></tr><tr><td>RV6</td><td>VOLUME (mix.osc2)</td><td>MX1</td><td>5</td><td>RV6_W</td></tr><tr><td>RV7</td><td>VOLUME (mix.osc3)</td><td>MX1</td><td>6</td><td>RV7_W</td></tr><tr><td>RV9</td><td>NOISE VOLUME (mix.noise)</td><td>MX1</td><td>7</td><td>RV9_W</td></tr><tr><td>RV10</td><td>CUTOFF FREQUENCY (filter.cutoff)</td><td>MX1</td><td>8</td><td>RV10_W</td></tr><tr><td>RV11</td><td>EMPHASIS (filter.resonance)</td><td>MX1</td><td>9</td><td>RV11_W</td></tr><tr><td>RV12</td><td>AMOUNT OF CONTOUR (filter.env_amount)</td><td>MX1</td><td>10</td><td>RV12_W</td></tr><tr><td>RV13</td><td>ATTACK TIME (env.filter.attack)</td><td>MX1</td><td>11</td><td>RV13_W</td></tr><tr><td>RV14</td><td>DECAY TIME (env.filter.decay)</td><td>MX1</td><td>12</td><td>RV14_W</td></tr><tr><td>RV15</td><td>SUSTAIN LEVEL (env.filter.sustain)</td><td>MX1</td><td>13</td><td>RV15_W</td></tr><tr><td>RV16</td><td>ATTACK TIME (env.amp.attack)</td><td>MX1</td><td>14</td><td>RV16_W</td></tr><tr><td>RV17</td><td>DECAY TIME (env.amp.decay)</td><td>MX1</td><td>15</td><td>RV17_W</td></tr><tr><td>RV18</td><td>SUSTAIN LEVEL (env.amp.sustain)</td><td>MX2</td><td>0</td><td>RV18_W</td></tr><tr><td>RV19</td><td>VOLUME (output.main_volume)</td><td>MX2</td><td>1</td><td>RV19_W</td></tr><tr><td>RV20</td><td>PHONES (output.phones_volume)</td><td>MX2</td><td>2</td><td>RV20_W</td></tr></tbody></table></div><p>Unused MX2 inputs C3–C15 are grounded. EN is tied low on both muxes.</p></details>
+<details><summary>Encoders (8)</summary><div class="tw"><table class=""><thead><tr><th>Encoder</th><th>Function</th><th>A / B / push → MCP port</th></tr></thead><tbody><tr><td>E1</td><td>RANGE (osc1.range)</td><td>A→IO1.GPA0, B→IO1.GPA1, SW1→IO1.GPA2</td></tr><tr><td>E2</td><td>WAVEFORM (osc1.wave)</td><td>A→IO1.GPA3, B→IO1.GPA4, SW1→IO1.GPA5</td></tr><tr><td>E3</td><td>RANGE (osc2.range)</td><td>A→IO1.GPA6, B→IO1.GPB0, SW1→IO1.GPB1</td></tr><tr><td>E4</td><td>FREQUENCY (osc2.detune)</td><td>A→IO1.GPB2, B→IO1.GPB3, SW1→IO1.GPB4</td></tr><tr><td>E5</td><td>WAVEFORM (osc2.wave)</td><td>A→IO1.GPB5, B→IO1.GPB6, SW1→IO2.GPA0</td></tr><tr><td>E6</td><td>RANGE (osc3.range)</td><td>A→IO2.GPA1, B→IO2.GPA2, SW1→IO2.GPA3</td></tr><tr><td>E7</td><td>FREQUENCY (osc3.detune)</td><td>A→IO2.GPA4, B→IO2.GPA5, SW1→IO2.GPA6</td></tr><tr><td>E8</td><td>WAVEFORM (osc3.wave)</td><td>A→IO2.GPB0, B→IO2.GPB1, SW1→IO2.GPB2</td></tr></tbody></table></div></details>
+<details><summary>Switches (17)</summary><div class="tw"><table class=""><thead><tr><th>Switch</th><th>Function</th><th>Net</th><th>MCP port</th></tr></thead><tbody><tr><td>S1</td><td>Osc mod (mod.osc_enable)</td><td>S1_ON</td><td>IO2.GPB3</td></tr><tr><td>S2</td><td>Osc3 / EG (mod.source_a)</td><td>S2_ON</td><td>IO2.GPB4</td></tr><tr><td>S3</td><td>Noise / LFO (mod.source_b)</td><td>S3_ON</td><td>IO2.GPB5</td></tr><tr><td>S4</td><td>Glide on (glide.enable)</td><td>S4_ON</td><td>IO2.GPB6</td></tr><tr><td>S5</td><td>Decay on (env.decay_enable)</td><td>S5_ON</td><td>IO3.GPA0</td></tr><tr><td>S6</td><td>LFO shape (lfo.shape)</td><td>S6_ON</td><td>IO3.GPA1</td></tr><tr><td>S7</td><td>Osc3 keyboard (osc3.keyboard)</td><td>S7_ON</td><td>IO3.GPA2</td></tr><tr><td>S8</td><td>Osc 1 on (mix.osc1_enable)</td><td>S8_ON</td><td>IO3.GPA3</td></tr><tr><td>S9</td><td>Osc 2 on (mix.osc2_enable)</td><td>S9_ON</td><td>IO3.GPA4</td></tr><tr><td>S10</td><td>Osc 3 on (mix.osc3_enable)</td><td>S10_ON</td><td>IO3.GPA5</td></tr><tr><td>S12</td><td>Noise on (mix.noise_enable)</td><td>S12_ON</td><td>IO3.GPA6</td></tr><tr><td>S13</td><td>White / Pink (noise.type)</td><td>S13_ON</td><td>IO3.GPB0</td></tr><tr><td>S14</td><td>Filter mod (mod.filter_enable)</td><td>S14_ON</td><td>IO3.GPB1</td></tr><tr><td>S15</td><td>Keytrack 1 (filter.keytrack1)</td><td>S15_ON</td><td>IO3.GPB2</td></tr><tr><td>S16</td><td>Keytrack 2 (filter.keytrack2)</td><td>S16_ON</td><td>IO3.GPB3</td></tr><tr><td>S17</td><td>Main on (output.main_enable)</td><td>S17_ON</td><td>IO3.GPB4</td></tr><tr><td>S18</td><td>A-440 (output.a440)</td><td>S18_ON</td><td>IO3.GPB5</td></tr></tbody></table></div></details>
+
+<h2 id="schematics">7. Schematics</h2>
+<p>Generated from the design data with standard KiCad symbols; the netlist matches the design data. Module pin numbers are placeholders until the headers are measured.</p>
+<p><a class="btn" href="assets/schematic-control.svg">Control (SVG)</a><a class="btn" href="../../hardware/split-r0.5/reports/control-schematic.pdf">Control (PDF)</a>
+<a class="btn" href="assets/schematic-core.svg">Core (SVG)</a><a class="btn" href="../../hardware/split-r0.5/reports/core-schematic.pdf">Core (PDF)</a></p>
+<figure class="fig"><a href="assets/schematic-control.svg"><img src="assets/schematic-control.svg" alt="Control board schematic" loading="lazy"></a><p class="cap">Control board</p></figure>
+<figure class="fig"><a href="assets/schematic-core.svg"><img src="assets/schematic-core.svg" alt="Core board schematic" loading="lazy"></a><p class="cap">Core board</p></figure>
+
+<h2 id="renders">8. 3D and CAD</h2>
+<div class="grid2"><figure class="fig"><img src="../../hardware/split-r0.5/previews/3d/control-iso.png" alt="Control PCB 3D" loading="lazy"><p class="cap">Control PCB</p></figure>
+<figure class="fig"><img src="../../hardware/split-r0.5/previews/3d/core-iso.png" alt="Core PCB 3D" loading="lazy"><p class="cap">Core PCB</p></figure>
+<figure class="fig"><img src="../../hardware/split-r0.5/previews/assembled-rear.png" alt="Rear view" loading="lazy"><p class="cap">Rear: jacks and USB</p></figure>
+<figure class="fig"><img src="../../hardware/split-r0.5/previews/interior-cable.png" alt="Interior" loading="lazy"><p class="cap">Interior: sloped control board above the flat core board</p></figure></div>
+<p>Downloads: <a class="btn" href="../../hardware/split-r0.5/stl/control-board.stl">control-board.stl</a><a class="btn" href="../../hardware/split-r0.5/stl/control-assembly.stl">control-assembly.stl</a>
+<a class="btn" href="../../hardware/split-r0.5/stl/core-board.stl">core-board.stl</a><a class="btn" href="../../hardware/split-r0.5/stl/core-assembly.stl">core-assembly.stl</a>
+<a class="btn" href="../../mechanical/split-r0.5/split-enclosure-and-boards.step">Full CAD (STEP)</a></p>
+<p>Renders use reconstructed component models, not certified vendor CAD.</p>
+
+<h2 id="status">9. Status and open work</h2>
+<div class="cards"><div class="card"><b>100 / 277</b>control terminals with pads</div>
+<div class="card"><b>36 / 71</b>core terminals with pads</div>
+<div class="card"><b>28</b>components without footprints</div></div>
+<ul><li><b>Footprints:</b> done for EC11 encoders and the slide switches (4.7&nbsp;mm pitch). The pot footprint is next, using the Alpha RD901F datasheet as a proxy. The ESP, DAC, headphone amp, MCP and mux modules and the main jack still need measurements.</li>
+<li><b>Layout:</b> the new switch pads expose conflicts for S4, S10 and S13 (a GND track through pads, mounting-hole overlap). The routed tracks pre-date the real pads.</li>
+<li><b>Electrical:</b> keyboard VBUS source, 3.3&nbsp;V regulator headroom, module pull-ups and straps, audio coupling and gain.</li>
+<li><b>Milling:</b> process rules (bit size, clearances) and the plated-through-hole substitute are not yet checked against the layout.</li></ul>
+
+<h2 id="files">10. Files</h2>
+<div class="tw"><table class=""><thead><tr><th>What</th><th>Where</th></tr></thead><tbody><tr><td>Plan (Markdown, source of this page)</td><td><a href="../plan-r0.5.md"><code>docs/plan-r0.5.md</code></a></td></tr><tr><td>Architecture and ribbon detail</td><td><a href="../../hardware/split-r0.5/architecture.md"><code>hardware/split-r0.5/architecture.md</code></a></td></tr><tr><td>Unverified items to measure</td><td><a href="../../hardware/split-r0.5/remaining-verification.md"><code>hardware/split-r0.5/remaining-verification.md</code></a></td></tr><tr><td>Decisions (Dutch)</td><td><a href="../decisions.md"><code>docs/decisions.md</code></a></td></tr><tr><td>KiCad projects</td><td><code>hardware/split-r0.5/control/</code>, <code>hardware/split-r0.5/core/</code></td></tr><tr><td>Reports (audit, DRC, ERC)</td><td><code>hardware/split-r0.5/reports/</code></td></tr><tr><td>Enclosure</td><td><a href="../../mechanical/split-r0.5/README.md"><code>mechanical/split-r0.5/README.md</code></a></td></tr><tr><td>Rebuild this page</td><td><code>python3 scripts/build_docs_r05.py</code></td></tr><tr><td>Rebuild schematics / STLs / switch footprint</td><td><code>scripts/build_schematics_r05.py</code>, <code>scripts/export_stl_r05.py</code>, <code>scripts/build_switch_footprint_r05.py</code></td></tr></tbody></table></div>
+<footer>Generated from the repository data. The Markdown plan is the source for the prose and diagrams.</footer>
+</div></body></html>
