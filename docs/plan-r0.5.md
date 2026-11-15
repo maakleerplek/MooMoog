@@ -58,7 +58,7 @@ Arrows show signal direction. The ribbon is the only link between the boards.
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "22px"}, "flowchart": {"nodeSpacing": 50, "rankSpacing": 70, "padding": 20}}}%%
-flowchart LR
+flowchart TB
   subgraph CTRL["CONTROL board"]
     POTS["19 pots"]
     MX["2 muxes<br/>(analog)"]
